@@ -13,6 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Model for context based configuration.
+ *
+ * @package local_advancedconfig\model
+ * @copyright 2017 Monash University (http://www.monash.edu)
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace local_advancedconfig\model;
 
 defined('MOODLE_INTERNAL') || die();
@@ -28,7 +35,8 @@ class config implements \cacheable_object {
     private $children;
 
     /**
-     * container constructor.
+     * Container constructor.
+     *
      * @param string $plugin
      * @param string $name
      * @param string[] $children
@@ -40,6 +48,9 @@ class config implements \cacheable_object {
     }
 
     /**
+     * Returns the first value available in a context path,
+     * searches from the end.
+     *
      * @param string $contextpath
      * @return string
      */
@@ -54,6 +65,9 @@ class config implements \cacheable_object {
     }
 
     /**
+     * Returns the config value for a specific context if
+     * there are any.
+     *
      * @param string $contextid
      * @return string|null
      */

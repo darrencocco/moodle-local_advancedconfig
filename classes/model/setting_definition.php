@@ -13,6 +13,16 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Abstract class for setting definitions.
+ *
+ * Override this class for settings that have
+ * special handling requirements.
+ *
+ * @package local_advancedconfig\model
+ * @copyright 2017 Monash University (http://www.monash.edu)
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace local_advancedconfig\model;
 
 defined('MOODLE_INTERNAL') || die();
@@ -26,6 +36,7 @@ abstract class setting_definition {
     private $basictype;
     private $inputtype;
     private $default;
+    private $capability;
 
     /**
      * setting_definition constructor.
@@ -34,13 +45,15 @@ abstract class setting_definition {
      * @param validator $basictype
      * @param input $inputtype
      * @param mixed $default
+     * @param string $capability
      */
-    public function __construct($component, $name, validator $basictype, input $inputtype, $default) {
+    public function __construct($component, $name, validator $basictype, input $inputtype, $default, $capability) {
         $this->component = $component;
         $this->name = $name;
         $this->basictype = $basictype;
         $this->inputtype = $inputtype;
         $this->default = $default;
+        $this->capability = $capability;
     }
 
     /**
@@ -80,8 +93,12 @@ abstract class setting_definition {
         return $this->inputtype->get_type();
     }
 
+    public function clean_input($input) {
+        return \clean_param($input, $this->basictype->param_type());
+    }
+
     public function required_capability() {
-        return 'moodle/site:config';
+        return $this->capability;
     }
 
     protected function validate() {

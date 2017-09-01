@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Cache data loader for plugin settings.
+ * Cache data loader for class inheritance maps.
  *
  * @package local_advancedconfig\dao
  * @copyright 2017 Monash University (http://www.monash.edu)
@@ -22,14 +22,14 @@
  */
 namespace local_advancedconfig\dao;
 
+use cache_definition;
+use local_advancedconfig\helper\classes;
+
 defined('MOODLE_INTERNAL') || die();
 
-use cache_definition;
-use \local_advancedconfig\model\plugin_settings as pluginsettings_model;
+class child_classes implements \cache_data_source{
 
-class plugin_settings implements \cache_data_source {
-
-    /** @var plugin_settings */
+    /** @var child_classes */
     protected static $instance = null;
 
     /**
@@ -41,7 +41,7 @@ class plugin_settings implements \cache_data_source {
      */
     public static function get_instance_for_cache(cache_definition $definition) {
         if (is_null(self::$instance)) {
-            self::$instance = new plugin_settings();
+            self::$instance = new child_classes();
         }
         return self::$instance;
     }
@@ -53,13 +53,7 @@ class plugin_settings implements \cache_data_source {
      * @return mixed What ever data should be returned, or false if it can't be loaded.
      */
     public function load_for_cache($key) {
-        global $DB;
-        $sql = 'SELECT name
-                  FROM {local_advancedconfig_name} lac_n
-                  JOIN {local_advconf_component} lac_c ON lac_c.id = lac_n.component
-                 WHERE lac_c.component = :componentname';
-        $settings = $DB->get_field_sql($sql, ['componentname' => $key]);
-        return new pluginsettings_model($key, $settings);
+        return classes::find_classes_in_plugins('*', '/settings', $key, true);
     }
 
     /**
@@ -69,21 +63,10 @@ class plugin_settings implements \cache_data_source {
      * @return array An array of matching data items.
      */
     public function load_many_for_cache(array $keys) {
-        global $DB;
-        list($sqlsnippet, $params) = $DB->get_in_or_equal($keys);
-        $sql = "SELECT lac_n.id, lac_c.component, lac_n.name
-                  FROM {local_advconf_name} lac_n
-                  JOIN {local_advconf_component} lac_c ON lac_c.id = lac_n.component
-                 WHERE lac_c.component $sqlsnippet";
-        $settingrecords = $DB->get_records_sql($sql, $params);
-        $recordcollator = array_fill_keys($keys, []);
-        foreach ($settingrecords as $record) {
-            $recordcollator[$record->component][] = $record->name;
+        $results = [];
+        foreach ($keys as $key) {
+            $results[$key] = $this->load_for_cache($key);
         }
-        $returncollator = [];
-        foreach ($recordcollator as $component => $settings) {
-            $returncollator[$component] = new pluginsettings_model($component, $settings);
-        }
-        return $returncollator;
+        return $results;
     }
 }

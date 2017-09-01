@@ -33,7 +33,7 @@
  *
  * I would like to thank her for the work and for pointing me to it.
  *
- * @package    core
+ * @package    local_advancedconfig\helper
  * @copyright  2017 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

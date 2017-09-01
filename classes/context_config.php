@@ -13,6 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * API for end users.
+ * @api
+ * @package local_advancedconfig
+ * @copyright 2017 Monash University (http://www.monash.edu)
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace local_advancedconfig;
 
 defined('MOODLE_INTERNAL') || die();
@@ -20,6 +27,15 @@ defined('MOODLE_INTERNAL') || die();
 use local_advancedconfig\model\plugin_settings;
 
 class context_config {
+    /**
+     * Get the valid configuration for the context.
+     *
+     * @api
+     * @param \context $context
+     * @param string $plugin
+     * @param string $name
+     * @return string|\stdClass
+     */
     public static function get_config(\context $context, $plugin, $name = null) {
         if ($context->id === \context_system::instance()->id) {
             return \get_config($plugin, $name);
@@ -39,6 +55,17 @@ class context_config {
         }
     }
 
+    /**
+     * Placeholder
+     *
+     * TODO: Write me!
+     *
+     * @param $context
+     * @param $plugin
+     * @param $name
+     * @param $value
+     * @return bool
+     */
     public static function set_config($context, $plugin, $name, $value) {
         if ($context == \context_system::instance()) {
             return \set_config($name, $value, $plugin);

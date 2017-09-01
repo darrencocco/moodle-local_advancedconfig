@@ -14,32 +14,34 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Cache definitions.
+ * Interface definition a branch in the admin tree.
  *
+ * @package local_advancedconfig\model\tree\interfaces
  * @copyright 2017 Monash University (http://www.monash.edu)
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace local_advancedconfig\model\tree\interfaces;
+
 defined('MOODLE_INTERNAL') || die();
 
-$definitions = [
-    'config' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'staticacceleration' => true,
-        'simpledata' => false,
-        'datasource' => 'local_advancedconfig\dao\config',
-    ],
+interface branch {
+    /**
+     * @return string
+     */
+    public function get_parent();
 
-    'pluginsettings' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'staticacceleration' => true,
-        'simpledata' => true,
-        'datasource' => 'local_advancedconfig\dao\plugin_settings',
-    ],
+    /**
+     * @return string
+     */
+    public function get_name();
 
-    'childclassmap' => [
-        'mode' => cache_store::MODE_APPLICATION,
-        'staticacceleration' => true,
-        'simpledata' => true,
-        'datasource' => 'local_advancedconfig\dao\child_classes',
-    ]
-];
+    /**
+     * @return \lang_string
+     */
+    public function get_langstring();
+
+    /**
+     * @return string
+     */
+    public function get_capability();
+}

@@ -13,6 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Database maintenance functions.
+ *
+ * @package local_advancedconfig\helper
+ * @copyright 2017 Monash University (http://www.monash.edu)
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace local_advancedconfig\helper;
 
 defined('MOODLE_INTERNAL') || die();
@@ -21,6 +28,12 @@ use local_advancedconfig\model\setting_definition;
 use local_advancedconfig\scanner;
 
 class register_setting {
+    /**
+     * Scans for setting definitions and updates the database.
+     *
+     * Removes fields when definitions are gone, adds new ones
+     * where necessary.
+     */
     public static function update_db() {
         global $DB;
         $settings = scanner::scan_settings();

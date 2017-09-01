@@ -13,6 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Eventually used for web services information.
+ *
+ * @package local_advancedconfig\model\setting_definition
+ * @copyright 2017 Monash University (http://www.monash.edu)
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace local_advancedconfig\model\setting_definition;
 
 defined('MOODLE_INTERNAL') || die();

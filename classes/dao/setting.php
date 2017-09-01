@@ -13,6 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Context specific config settings database queries.
+ *
+ * @package local_advancedconfig\dao
+ * @copyright 2017 Monash University (http://www.monash.edu)
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace local_advancedconfig\dao;
 
 defined('MOODLE_INTERNAL') || die();
@@ -36,11 +43,15 @@ class setting {
         ]);
 
         if (isset($record->config_id)) {
-            $DB->update_record('local_advconf_config', (object)[
-                'id' => $record->config_id,
-                'config' => $value,
-            ]);
-        } else {
+            if ($value == '') {
+                $DB->delete_records('local_advconf_config', ['id' => $record->config_id]);
+            } else {
+                $DB->update_record('local_advconf_config', (object)[
+                    'id' => $record->config_id,
+                    'config' => $value,
+                ]);
+            }
+        } else if ($value != '') {
             $DB->insert_record('local_advconf_config', (object)[
                 'name' => $record->name_id,
                 'context' => $context->id,

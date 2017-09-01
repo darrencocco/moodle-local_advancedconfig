@@ -13,6 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Shim layer for admin_setting_config* classes.
+ *
+ * @package local_advancedconfig\helper
+ * @copyright 2017 Monash University (http://www.monash.edu)
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace local_advancedconfig\helper;
 
 defined('MOODLE_INTERNAL') || die();
@@ -71,7 +78,15 @@ class admin_setting_redirector extends \admin_setting {
      */
     public function write_setting($data) {
         if (!$this->definition->validate_input($data)) {
-            // TODO: Error string.
+            return 'Invalid input';
+        }
+        $cleaneddata = $this->definition->clean_input($data);
+        $cache = \cache::make('local_advancedconfig', 'config');
+        /** @var config $settings */
+        $settings = $cache->get($this->definition->get_fqn());
+        $storedvalue = $settings->get_value_single_context($this->context->id);
+        if ($storedvalue == $cleaneddata || ($storedvalue === null && $data == '')) {
+            return '';
         }
         $event = user_updated_config::create([
             'objectid' => $this->definition->get_fqn(),
@@ -85,6 +100,13 @@ class admin_setting_redirector extends \admin_setting {
         return '';
     }
 
+    /**
+     * Redirects request to shimmed object.
+     *
+     * @param mixed $data
+     * @param string $query
+     * @return string
+     */
     public function output_html($data, $query = '') {
         return $this->coresetting->output_html($data, $query);
     }

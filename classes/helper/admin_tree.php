@@ -13,6 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Helper functions for building admin trees.
+ *
+ * @package local_advancedconfig\helper
+ * @copyright 2017 Monash University (http://www.monash.edu)
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace local_advancedconfig\helper;
 
 defined('MOODLE_INTERNAL') || die();
@@ -20,16 +27,32 @@ defined('MOODLE_INTERNAL') || die();
 use local_advancedconfig\model\admin_tree_root;
 use local_advancedconfig\model\setting_definition;
 use local_advancedconfig\model\tree\branch;
-use local_advancedconfig\model\tree\leaf\interfaces\leaf_settings;
+use local_advancedconfig\model\tree\interfaces\leaf_settings;
 use local_advancedconfig\scanner;
 
 class admin_tree {
+    /**
+     * Returns a fully populated advancedconfig settings
+     * tree.
+     *
+     * @param \context $context
+     * @param bool $fulltree
+     * @return admin_tree_root
+     */
     public static function get_advancedconfig_tree (\context $context, $fulltree = false) {
         $root = new admin_tree_root($fulltree);
         self::append_to_admin_tree($context, $root, $fulltree);
         return $root;
     }
 
+    /**
+     * Searches through all settings defined through advancedconfig and
+     * appends them to the root node.
+     *
+     * @param \context $context
+     * @param \parentable_part_of_admin_tree $root
+     * @param boolean $fulltree
+     */
     public static function append_to_admin_tree(\context $context, \parentable_part_of_admin_tree $root, $fulltree) {
         $branches = scanner::scan_tree();
         $definedsettings = null;
@@ -71,8 +94,9 @@ class admin_tree {
      * @return \part_of_admin_tree
      */
     private static function polyfill_admin_tree_builder(\context $context, branch $branch, $fulltree, $definedsettings) {
-        if ($branch instanceof \local_advancedconfig\model\tree\leaf\interfaces\leaf_settings) {
-            $settingpage = new \admin_settingpage($branch->get_name(), $branch->get_langstring(),'moodle/site:config', false, $context);
+        if ($branch instanceof \local_advancedconfig\model\tree\interfaces\leaf_settings) {
+            $settingpage = new \admin_settingpage(
+                $branch->get_name(), $branch->get_langstring(), $branch->get_capability(), false, $context);
             if ($fulltree) {
                 foreach ($branch->get_page_settings() as $moduledefinition) {
                     self::add_admin_setting($context, $settingpage, $moduledefinition, $definedsettings);
@@ -85,6 +109,9 @@ class admin_tree {
     }
 
     /**
+     * Appends an admin setting to a admin tree using the
+     * admin_setting_redirector to intercept reading and writing.
+     *
      * @param \context $context
      * @param \admin_settingpage $settingpage
      * @param \admin_setting $setting

@@ -13,6 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Model for plugin setting lists.
+ *
+ * @package local_advancedconfig\model
+ * @copyright 2017 Monash University (http://www.monash.edu)
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace local_advancedconfig\model;
 
 defined('MOODLE_INTERNAL') || die();
@@ -20,8 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Class plugin_settings
  *
- * Used to cache a list of all known leafSettings under a specific plugin.
- *
+ * Used to cache a list of all known config settings under a specific plugin.
  * Used in calls to get_config("plugin name");
  *
  * @package local_advancedconfig\model

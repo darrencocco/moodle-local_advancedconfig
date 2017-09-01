@@ -13,13 +13,20 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Basic implementation of leaf_settings interface.
+ *
+ * @package local_advancedconfig\model\tree\leaf
+ * @copyright 2017 Monash University (http://www.monash.edu)
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace local_advancedconfig\model\tree\leaf;
 
 defined('MOODLE_INTERNAL') || die();
 
 use admin_setting;
 use local_advancedconfig\model\tree\branch;
-use local_advancedconfig\model\tree\leaf\interfaces\leaf_settings as interface_leaf_settings;
+use local_advancedconfig\model\tree\interfaces\leaf_settings as interface_leaf_settings;
 
 class leaf_settings extends branch implements interface_leaf_settings {
     private $settings;
@@ -30,10 +37,11 @@ class leaf_settings extends branch implements interface_leaf_settings {
      * @param string $parent
      * @param string $name
      * @param \lang_string $langstring
+     * @param string|string[] $capability
      * @param admin_setting[] $settings
      */
-    public function __construct($parent, $name, \lang_string $langstring, array $settings) {
-        parent::__construct($parent, $name, $langstring);
+    public function __construct($parent, $name, \lang_string $langstring, $capability, array $settings) {
+        parent::__construct($parent, $name, $langstring, $capability);
         $this->settings = $settings;
     }
 

@@ -13,30 +13,30 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-namespace {
-    defined('MOODLE_INTERNAL') || die();
-    global $CFG;
-    require_once($CFG->libdir . '/moodlelib.php');
-}
+/**
+ * Simple validator for generic parameters, realistically does nothing.
+ *
+ * @package local_advancedconfig\model\setting_definition\validate
+ * @copyright 2017 Monash University (http://www.monash.edu)
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+namespace local_advancedconfig\model\setting_definition\validate;
 
-namespace local_advancedconfig\model\setting_definition\validate {
-    class param_generic implements validator {
-        private $paramtype;
+defined('MOODLE_INTERNAL') || die();
 
-        public function __construct($paramtype) {
-            $this->paramtype = $paramtype;
-        }
 
-        public function validate($input) {
-            if ($input !== \clean_param($input, $this->paramtype)) {
-                return false;
-            } else {
-                return true;
-            }
-        }
+class param_generic implements validator {
+    private $paramtype;
 
-        public function param_type() {
-            return $this->paramtype;
-        }
+    public function __construct($paramtype) {
+        $this->paramtype = $paramtype;
+    }
+
+    public function validate($input) {
+        return true;
+    }
+
+    public function param_type() {
+        return $this->paramtype;
     }
 }

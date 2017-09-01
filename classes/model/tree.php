@@ -13,13 +13,38 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Public interface for other plugins to implement
+ * for defining admin settings tree layouts and
+ * admin page layout.
+ *
+ * @package local_advancedconfig\model
+ * @copyright 2017 Monash University (http://www.monash.edu)
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 namespace local_advancedconfig\model;
 
 defined('MOODLE_INTERNAL') || die();
 
 use local_advancedconfig\model\tree\branch;
 
+/**
+ * Interface tree
+ *
+ * Implement interface in the $plugin/classes/setting/
+ * directory, you may implement this interface in multiple
+ * classes.
+ *
+ * P.S. This can be implemented alongside the settings interface
+ * in the same class.
+ *
+ * @api
+ * @package local_advancedconfig\model
+ */
 interface tree {
+
+    public static function get_instance();
+
     /**
      * @return branch[]
      */

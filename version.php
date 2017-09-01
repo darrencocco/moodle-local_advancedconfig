@@ -23,8 +23,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_advancedconfig';
-$plugin->version = 2017083100;
-$plugin->release = 'v0.1';
+$plugin->version = 2017090102;
+$plugin->release = 'v0.2';
 $plugin->requires = 2016052300;
 $plugin->maturity = MATURITY_ALPHA;
 $plugin->cron = 0;

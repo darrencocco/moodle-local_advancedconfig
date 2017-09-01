@@ -13,13 +13,20 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-namespace local_advancedconfig\model\tree\leaf\interfaces;
+/**
+ * Interface definition a settings page.
+ *
+ * @package local_advancedconfig\model\tree\interfaces
+ * @copyright 2017 Monash University (http://www.monash.edu)
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+namespace local_advancedconfig\model\tree\interfaces;
 
 defined('MOODLE_INTERNAL') || die();
 
 use admin_setting;
 
-interface leaf_settings {
+interface leaf_settings extends branch {
     /**
      * @return admin_setting[]
      */
