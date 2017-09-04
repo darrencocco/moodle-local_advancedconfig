@@ -40,7 +40,7 @@ class config_observer {
         $data = $event->get_data()['other'];
         /** @var setting_definition $definition */
         $definition = $data['definition'];
-        if (has_capability($definition->required_capability(), $event->get_context(), $event->userid)) {
+        if (has_any_capability($definition->required_capability(), $event->get_context(), $event->userid)) {
             $input = $definition->clean_input($data['data']);
             if ($definition->validate_input($input)) {
                 setting::write($definition, $event->get_context(), $input);

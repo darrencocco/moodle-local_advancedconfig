@@ -45,7 +45,7 @@ abstract class setting_definition {
      * @param validator $basictype
      * @param input $inputtype
      * @param mixed $default
-     * @param string $capability
+     * @param string|string[] $capability
      */
     public function __construct($component, $name, validator $basictype, input $inputtype, $default, $capability) {
         $this->component = $component;
@@ -53,7 +53,11 @@ abstract class setting_definition {
         $this->basictype = $basictype;
         $this->inputtype = $inputtype;
         $this->default = $default;
-        $this->capability = $capability;
+        if (!is_array($capability)) {
+            $this->capability = [$capability];
+        } else {
+            $this->capability = $capability;
+        }
     }
 
     /**
