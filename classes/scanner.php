@@ -38,7 +38,13 @@ class scanner {
      */
     public static function scan_settings() {
         $cache = \cache::make('local_advancedconfig', 'childclassmap');
-        $plugins = $cache->get('local_advancedconfig\\model\\settings');
+        // Stopgap for MDL-42012 and MDL-43356.
+        if ($cache instanceof \cache_disabled) {
+            $plugins = classes::find_classes_in_plugins('*', '/settings',
+                'local_advancedconfig\\model\\settings', true);
+        } else {
+            $plugins = $cache->get('local_advancedconfig\\model\\settings');
+        }
         $settings = [];
         foreach ($plugins as $plugin) {
             foreach ($plugin as $class) {
@@ -63,7 +69,13 @@ class scanner {
      */
     public static function scan_tree() {
         $cache = \cache::make('local_advancedconfig', 'childclassmap');
-        $plugins = $cache->get('local_advancedconfig\\model\\tree');
+        // Stopgap for MDL-42012 and MDL-43356.
+        if ($cache instanceof \cache_disabled) {
+            $plugins = classes::find_classes_in_plugins('*', '/settings',
+                'local_advancedconfig\\model\\tree', true);
+        } else {
+            $plugins = $cache->get('local_advancedconfig\\model\\tree');
+        }
         /** @var branch[] $treedata */
         $treedata = [];
         foreach ($plugins as $plugin) {

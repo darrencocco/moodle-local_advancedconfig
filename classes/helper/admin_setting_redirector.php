@@ -65,6 +65,10 @@ class admin_setting_redirector extends \admin_setting {
      */
     public function get_setting() {
         $cache = \cache::make('local_advancedconfig', 'config');
+        // Stopgap for MDL-42012 and MDL-43356.
+        if ($cache instanceof \cache_disabled) {
+            return $this->definition->process_from_storage(get_config($this->definition->get_component(), $this->definition->get_name()));
+        }
         /** @var config $settings */
         $settings = $cache->get($this->definition->get_fqn());
         return $this->definition->process_from_storage($settings->get_value_single_context($this->context->id));
