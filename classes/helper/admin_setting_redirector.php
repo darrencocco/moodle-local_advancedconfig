@@ -86,9 +86,13 @@ class admin_setting_redirector extends \admin_setting {
         }
         $cleaneddata = $this->definition->clean_input($data);
         $cache = \cache::make('local_advancedconfig', 'config');
-        /** @var config $settings */
-        $settings = $cache->get($this->definition->get_fqn());
-        $storedvalue = $settings->get_value_single_context($this->context->id);
+        if ($cache instanceof  \cache_disabled) {
+            $storedvalue = get_config($this->definition->get_component(), $this->definition->get_name());
+        } else {
+            /** @var config $settings */
+            $settings = $cache->get($this->definition->get_fqn());
+            $storedvalue = $settings->get_value_single_context($this->context->id);
+        }
         if ($storedvalue == $cleaneddata || ($storedvalue === null && $data == '')) {
             return '';
         }
