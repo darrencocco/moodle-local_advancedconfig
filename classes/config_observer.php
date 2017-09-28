@@ -37,9 +37,11 @@ class config_observer {
      * @param user_updated_config $event
      */
     public static function write(user_updated_config $event) {
-        $data = json_decode($event->get_data()['other']);
-        /** @var setting_definition $definition */
-        $definition = $data->definition;
+        $data = $event->get_data()['other'];
+        // FIXME: This is currently very inefficient(ALPHA).
+        // Maybe definitions should be cached as well.
+        $definitions = scanner::scan_settings();
+        $definition = $definitions[$data->fqn];
         if (has_any_capability($definition->required_capability(), $event->get_context(), $event->userid)) {
             $input = $definition->clean_input($data->data);
             if ($definition->validate_input($input)) {

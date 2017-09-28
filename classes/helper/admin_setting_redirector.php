@@ -92,22 +92,24 @@ class admin_setting_redirector extends \admin_setting {
         $cache = \cache::make('local_advancedconfig', 'config');
         if ($cache instanceof  \cache_disabled) {
             $storedvalue = get_config($this->definition->get_component(), $this->definition->get_name());
+            $nameid = -1;
         } else {
             /** @var config $settings */
             $settings = $cache->get($this->definition->get_fqn());
             $storedvalue = $settings->get_value_single_context($this->context->id);
+            $nameid = $settings->get_nameid();
         }
         if ($storedvalue === $cleaneddata || ($storedvalue === null && $data == '')) {
             return '';
         }
         $event = user_updated_config::create([
-            'objectid' => $settings->get_nameid(),
+            'objectid' => $nameid,
             'contextid' => $this->context->id,
             'userid' => $USER->id,
-            'other' => json_encode((object)[
-                'definition' => $this->definition,
+            'other' => (object)[
+                'fqn' => $this->definition->get_fqn(), // FIXME: This is currently very inefficient(ALPHA).
                 'data' => $this->definition->prepare_for_storage($data),
-            ]),
+            ],
         ]);
         $event->trigger();
         return '';
