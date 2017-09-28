@@ -64,6 +64,9 @@ class admin_setting_redirector extends \admin_setting {
      * @return mixed array or string depending on instance, NULL means not set yet
      */
     public function get_setting() {
+        if ($this->context == \context_system::instance()) {
+            return $this->definition->process_from_storage(get_config($this->definition->get_component(), $this->definition->get_name()));
+        }
         $cache = \cache::make('local_advancedconfig', 'config');
         // Stopgap for MDL-42012 and MDL-43356.
         if ($cache instanceof \cache_disabled) {
@@ -93,7 +96,7 @@ class admin_setting_redirector extends \admin_setting {
             $settings = $cache->get($this->definition->get_fqn());
             $storedvalue = $settings->get_value_single_context($this->context->id);
         }
-        if ($storedvalue == $cleaneddata || ($storedvalue === null && $data == '')) {
+        if ($storedvalue === $cleaneddata || ($storedvalue === null && $data == '')) {
             return '';
         }
         $event = user_updated_config::create([

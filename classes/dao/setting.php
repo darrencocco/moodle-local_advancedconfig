@@ -58,5 +58,9 @@ class setting {
                 'config' => $value,
             ]);
         }
+
+        if ($context == \context_system::instance()) {
+            set_config($setting->get_name(), $value, $setting->get_component());
+        }
     }
 }
