@@ -106,7 +106,7 @@ class admin_setting_redirector extends \admin_setting {
             'objectid' => $nameid,
             'contextid' => $this->context->id,
             'userid' => $USER->id,
-            'other' => (object)[
+            'other' => [
                 'fqn' => $this->definition->get_fqn(), // FIXME: This is currently very inefficient(ALPHA).
                 'data' => $this->definition->prepare_for_storage($data),
             ],

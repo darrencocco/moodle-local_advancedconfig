@@ -41,9 +41,9 @@ class config_observer {
         // FIXME: This is currently very inefficient(ALPHA).
         // Maybe definitions should be cached as well.
         $definitions = scanner::scan_settings();
-        $definition = $definitions[$data->fqn];
+        $definition = $definitions[$data['fqn']];
         if (has_any_capability($definition->required_capability(), $event->get_context(), $event->userid)) {
-            $input = $definition->clean_input($data->data);
+            $input = $definition->clean_input($data['data']);
             if ($definition->validate_input($input)) {
                 setting::write($definition, $event->get_context(), $input);
                 \cache_helper::invalidate_by_definition('local_advancedconfig', 'config', [], $definition->get_fqn());
