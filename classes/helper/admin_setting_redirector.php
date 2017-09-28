@@ -101,7 +101,7 @@ class admin_setting_redirector extends \admin_setting {
             return '';
         }
         $event = user_updated_config::create([
-            'objectid' => $this->definition->get_fqn(),
+            'objectid' => $settings->get_nameid(),
             'contextid' => $this->context->id,
             'userid' => $USER->id,
             'other' => json_encode((object)[
