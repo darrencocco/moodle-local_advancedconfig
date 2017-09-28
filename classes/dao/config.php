@@ -55,17 +55,21 @@ class config implements \cache_data_source {
     public function load_for_cache($key) {
         global $DB;
         $keycomponents = explode('/', $key);
-        $sql = 'SELECT lac_conf.context, lac_c.component, lac_n.name, lac_conf.config
+        $sql = 'SELECT lac_conf.context, lac_c.component, lac_n.name, lac_n.id AS nameid, lac_conf.config
                   FROM {local_advconf_config} lac_conf
                   JOIN {local_advconf_name} lac_n ON lac_conf.name = lac_n.id
                   JOIN {local_advconf_component} lac_c ON lac_n.component = lac_c.id
                  WHERE lac_c.component = :component AND lac_n.name = :name';
         $records = $DB->get_records_sql($sql, ['component' => $keycomponents[0], 'name' => $keycomponents[1]]);
         $contextmaps = [];
+        $nameid = null;
         foreach ($records as $record) {
+            if(is_null($nameid)) {
+                $nameid = $record->nameid;
+            }
             $contextmaps[$record->context] = $record->config;
         }
-        return new container_model($keycomponents[0], $keycomponents[1], $contextmaps);
+        return new container_model($keycomponents[0], $keycomponents[1], $nameid, $contextmaps);
     }
 
     /**

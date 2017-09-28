@@ -41,6 +41,6 @@ class user_updated_config extends \core\event\base {
     protected function init() {
         $this->data['edulevel'] = self::LEVEL_OTHER;
         $this->data['crud'] = 'u';
-        $this->data['objecttable'] = 'local_advancedconfig_config';
+        $this->data['objecttable'] = 'local_advconf_name';
     }
 }

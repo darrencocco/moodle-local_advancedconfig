@@ -84,6 +84,7 @@ class admin_setting_redirector extends \admin_setting {
      * @return string empty string if ok, string error message otherwise
      */
     public function write_setting($data) {
+        global $USER;
         if (!$this->definition->validate_input($data)) {
             return 'Invalid input';
         }
@@ -102,10 +103,11 @@ class admin_setting_redirector extends \admin_setting {
         $event = user_updated_config::create([
             'objectid' => $this->definition->get_fqn(),
             'contextid' => $this->context->id,
-            'other' => [
+            'userid' => $USER->id,
+            'other' => json_encode((object)[
                 'definition' => $this->definition,
                 'data' => $this->definition->prepare_for_storage($data),
-                ],
+            ]),
         ]);
         $event->trigger();
         return '';

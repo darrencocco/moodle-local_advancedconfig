@@ -34,6 +34,9 @@ class config implements \cacheable_object {
     /** @var string[] */
     private $children;
 
+    /** @var integer */
+    private $nameid;
+
     /**
      * Container constructor.
      *
@@ -41,9 +44,10 @@ class config implements \cacheable_object {
      * @param string $name
      * @param string[] $children
      */
-    public function __construct($plugin, $name, array $children) {
+    public function __construct($plugin, $name, $nameid, array $children) {
         $this->plugin = $plugin;
         $this->name = $name;
+        $this->nameid = $nameid;
         $this->children = $children;
     }
 
@@ -80,6 +84,13 @@ class config implements \cacheable_object {
     }
 
     /**
+     * @return int
+     */
+    public function get_nameid() {
+        return $this->nameid;
+    }
+
+    /**
      * Prepares the object for caching. Works like the __sleep method.
      *
      * @return mixed The data to cache, can be anything except a class that implements the cacheable_object... that would
@@ -89,6 +100,7 @@ class config implements \cacheable_object {
         return (object)[
             'plugin' => $this->plugin,
             'name' => $this->name,
+            'nameid' => $this->nameid,
             'children' => $this->children];
     }
 
@@ -99,6 +111,6 @@ class config implements \cacheable_object {
      * @return object The instance for the given data.
      */
     public static function wake_from_cache($data) {
-        return new config($data->plugin, $data->name, $data->children);
+        return new config($data->plugin, $data->name, $data->nameid, $data->children);
     }
 }

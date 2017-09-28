@@ -37,11 +37,11 @@ class config_observer {
      * @param user_updated_config $event
      */
     public static function write(user_updated_config $event) {
-        $data = $event->get_data()['other'];
+        $data = json_decode($event->get_data()['other']);
         /** @var setting_definition $definition */
-        $definition = $data['definition'];
+        $definition = $data->definition;
         if (has_any_capability($definition->required_capability(), $event->get_context(), $event->userid)) {
-            $input = $definition->clean_input($data['data']);
+            $input = $definition->clean_input($data->data);
             if ($definition->validate_input($input)) {
                 setting::write($definition, $event->get_context(), $input);
                 \cache_helper::invalidate_by_definition('local_advancedconfig', 'config', [], $definition->get_fqn());
