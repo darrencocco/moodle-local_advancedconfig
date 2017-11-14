@@ -24,6 +24,8 @@ namespace local_advancedconfig;
 
 defined('MOODLE_INTERNAL') || die();
 
+use local_advancedconfig\event\user_updated_config;
+use local_advancedconfig\model\config;
 use local_advancedconfig\model\plugin_settings;
 
 class context_config {
@@ -56,10 +58,11 @@ class context_config {
     }
 
     /**
-     * Placeholder
+     * Sets an advanced config in a given context.
      *
-     * TODO: Write me!
+     * FIXME: Very inefficient
      *
+     * @api
      * @param $context
      * @param $plugin
      * @param $name
@@ -67,8 +70,25 @@ class context_config {
      * @return bool
      */
     public static function set_config($context, $plugin, $name, $value) {
+        global $USER;
+        $definitions = scanner::scan_settings();
+        $definition = $definitions[$plugin . '/' . $name];
+        $cache = \cache::make('local_advancedconfig', 'config');
+        /** @var config $settings */
+        $settings = $cache->get($definition->get_fqn());
+        $event = user_updated_config::create([
+            'objectid' => $settings->get_nameid(),
+            'contextid' => $context->id,
+            'userid' => $USER->id,
+            'other' => [
+                'fqn' => $definition->get_fqn(),
+                'data' => $definition->prepare_for_storage($value),
+            ],
+        ]);
+        $event->trigger();
         if ($context == \context_system::instance()) {
             return \set_config($name, $value, $plugin);
         }
+        return true;
     }
 }

@@ -53,7 +53,9 @@ class child_classes implements \cache_data_source{
      * @return mixed What ever data should be returned, or false if it can't be loaded.
      */
     public function load_for_cache($key) {
-        return classes::find_classes_in_plugins('*', '/settings', $key, true);
+        return array_merge (
+            classes::find_classes_in_plugins('*', '/settings', $key, true),
+            classes::find_classes_in_subsystems('*', '/settings', $key, true));
     }
 
     /**

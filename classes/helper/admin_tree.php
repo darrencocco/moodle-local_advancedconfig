@@ -120,9 +120,15 @@ class admin_tree {
     private static function add_admin_setting(
         \context $context, \admin_settingpage $settingpage, \admin_setting $setting, $definedsettings) {
 
+        if (is_null($setting->plugin)) {
+            $plugin = 'moodle';
+        } else {
+            $plugin = $setting->plugin;
+        }
+
         $settingpage->add(new admin_setting_redirector(
             $setting,
-            $definedsettings[$setting->plugin . '/' .$setting->name],
+            $definedsettings[$plugin . '/' .$setting->name],
             $context));
     }
 }

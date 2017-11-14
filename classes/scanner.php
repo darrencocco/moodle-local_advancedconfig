@@ -24,6 +24,7 @@ namespace local_advancedconfig;
 
 defined('MOODLE_INTERNAL') || die();
 
+use local_advancedconfig\dao\child_classes;
 use local_advancedconfig\helper\classes;
 use local_advancedconfig\model\setting_definition;
 use local_advancedconfig\model\settings;
@@ -40,8 +41,8 @@ class scanner {
         $cache = \cache::make('local_advancedconfig', 'childclassmap');
         // Stopgap for MDL-42012 and MDL-43356.
         if ($cache instanceof \cache_disabled) {
-            $plugins = classes::find_classes_in_plugins('*', '/settings',
-                'local_advancedconfig\\model\\settings', true);
+            $childscanner = child_classes::get_instance_for_cache(new \cache_definition());
+            $plugins = $childscanner->load_for_cache('local_advancedconfig\\model\\settings');
         } else {
             $plugins = $cache->get('local_advancedconfig\\model\\settings');
         }
@@ -71,8 +72,8 @@ class scanner {
         $cache = \cache::make('local_advancedconfig', 'childclassmap');
         // Stopgap for MDL-42012 and MDL-43356.
         if ($cache instanceof \cache_disabled) {
-            $plugins = classes::find_classes_in_plugins('*', '/settings',
-                'local_advancedconfig\\model\\tree', true);
+            $childscanner = child_classes::get_instance_for_cache(new \cache_definition());
+            $plugins = $childscanner->load_for_cache('local_advancedconfig\\model\\tree');
         } else {
             $plugins = $cache->get('local_advancedconfig\\model\\tree');
         }

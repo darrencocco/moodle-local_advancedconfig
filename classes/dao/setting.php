@@ -60,7 +60,11 @@ class setting {
         }
 
         if ($context == \context_system::instance()) {
-            set_config($setting->get_name(), $value, $setting->get_component());
+            if ($setting->get_component() == 'moodle') {
+                set_config($setting->get_name(), $value);
+            } else {
+                set_config($setting->get_name(), $value, $setting->get_component());
+            }
         }
     }
 }
