@@ -37,7 +37,7 @@ class plugin_settings implements \cache_data_source {
      * specified by this interface.
      *
      * @param cache_definition $definition
-     * @return object
+     * @return $this
      */
     public static function get_instance_for_cache(cache_definition $definition) {
         if (is_null(self::$instance)) {

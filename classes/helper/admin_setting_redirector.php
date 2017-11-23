@@ -24,6 +24,7 @@ namespace local_advancedconfig\helper;
 
 defined('MOODLE_INTERNAL') || die();
 
+use local_advancedconfig\dao\plugin_settings;
 use local_advancedconfig\event\user_updated_config;
 use local_advancedconfig\model\config;
 use local_advancedconfig\model\setting_definition;
@@ -91,19 +92,18 @@ class admin_setting_redirector extends \admin_setting {
         $cleaneddata = $this->definition->clean_input($data);
         $cache = \cache::make('local_advancedconfig', 'config');
         if ($cache instanceof  \cache_disabled) {
-            $storedvalue = get_config($this->definition->get_component(), $this->definition->get_name());
-            $nameid = -1;
+            $pluginsettings = plugin_settings::get_instance_for_cache(new \cache_definition());
+            $settings = $pluginsettings->load_for_cache($this->definition->get_fqn());
         } else {
             /** @var config $settings */
             $settings = $cache->get($this->definition->get_fqn());
-            $storedvalue = $settings->get_value_single_context($this->context->id);
-            $nameid = $settings->get_nameid();
         }
+        $storedvalue = $settings->get_value_single_context($this->context->id);
         if ($storedvalue === $cleaneddata || ($storedvalue === null && $data == '')) {
             return '';
         }
         $event = user_updated_config::create([
-            'objectid' => $nameid,
+            'objectid' => $settings->get_nameid(),
             'contextid' => $this->context->id,
             'userid' => $USER->id,
             'other' => [
