@@ -37,8 +37,12 @@ class behat_local_advancedconfig extends behat_base {
             $component = $config['component'];
             $name = $config['name'];
             $value = $config['value'];
-            $category = coursecat::get($this->get_category_id($categoryname));
-            context_config::set_config($category->get_context(), $component, $name, $value);
+            if ($categoryname === '0') {
+                $context = context_system::instance();
+            } else {
+                $context = coursecat::get($this->get_category_id($categoryname))->get_context();
+            }
+            context_config::set_config($context, $component, $name, $value);
         }
     }
 
@@ -51,8 +55,12 @@ class behat_local_advancedconfig extends behat_base {
      * @throws ExpectationException
      */
     public function config_setting_should_be($category, $component, $name, $value) {
-        $cat = $this->get_course_by_idnumber($category);
-        $retrievedvalue = context_config::get_config($cat->get_context(), $component, $name);
+        if ($category === '0') {
+            $context = context_system::instance();
+        } else {
+            $context = coursecat::get($this->get_category_id($category))->get_context();
+        }
+        $retrievedvalue = context_config::get_config($context, $component, $name);
         if ($retrievedvalue !== $value) {
             throw new ExpectationException("The config did not match $value", $this->getSession());
         }

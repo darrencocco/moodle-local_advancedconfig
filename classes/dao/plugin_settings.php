@@ -55,10 +55,13 @@ class plugin_settings implements \cache_data_source {
     public function load_for_cache($key) {
         global $DB;
         $sql = 'SELECT name
-                  FROM {local_advancedconfig_name} lac_n
+                  FROM {local_advconf_name} lac_n
                   JOIN {local_advconf_component} lac_c ON lac_c.id = lac_n.component
                  WHERE lac_c.component = :componentname';
         $settings = $DB->get_field_sql($sql, ['componentname' => $key]);
+        if ($settings === false) {
+            $settings = [];
+        }
         return new pluginsettings_model($key, $settings);
     }
 
