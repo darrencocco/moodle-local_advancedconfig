@@ -104,7 +104,9 @@ if (empty($SITE->fullname)) {
     echo '<input type="hidden" name="sesskey" value="'.sesskey().'" />';
     echo '<input type="hidden" name="return" value="'.$return.'" />';
     // HACK to prevent browsers from automatically inserting the user's password into the wrong fields.
-    echo prevent_form_autofill_password();
+    if (moodle_major_version() < '3.2') {
+        echo prevent_form_autofill_password();
+    }
 
     echo $settingspage->output_html();
 
@@ -148,13 +150,15 @@ if (empty($SITE->fullname)) {
     echo '<input type="hidden" name="sesskey" value="'.sesskey().'" />';
     echo '<input type="hidden" name="return" value="'.$return.'" />';
     // HACK to prevent browsers from automatically inserting the user's password into the wrong fields.
-    echo prevent_form_autofill_password();
+    if (moodle_major_version() < '3.2') {
+        echo prevent_form_autofill_password();
+    }
     echo $OUTPUT->heading($settingspage->visiblename);
 
     echo $settingspage->output_html();
 
     if ($settingspage->show_save()) {
-        echo '<div class="form-buttons"><input class="form-submit" type="submit" value="'.get_string('savechanges','admin').'" /></div>';
+        echo '<div class="form-buttons"><input class="form-submit btn btn-primary" type="submit" value="'.get_string('savechanges','admin').'" /></div>';
     }
 
     echo '</div>';
