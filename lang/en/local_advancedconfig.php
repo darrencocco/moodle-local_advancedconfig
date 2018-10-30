@@ -22,3 +22,4 @@ $string['lasthash'] = 'Last update hash';
 $string['cachedef_config'] = 'Config tree cache';
 $string['cachedef_pluginsettings'] = 'Settings definition sources cache';
 $string['cachedef_childclassmap'] = 'Child classes map cache';
+$string['privacy:metadata'] = 'The advanced config plugin extends the settings of other areas of Moodle and does not store user data.';
