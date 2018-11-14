@@ -15,4 +15,6 @@ function xmldb_local_advancedconfig_upgrade($oldversion) {
         // Advancedconfig savepoint reached.
         upgrade_plugin_savepoint(true, 2017101100, 'local', 'advancedconfig');
     }
+
+    return true;
 }
